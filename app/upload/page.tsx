@@ -1,6 +1,6 @@
 "use client";
 
-import { FormEvent, useRef, useState } from "react";
+import { FormEvent, useMemo, useRef, useState } from "react";
 import { useMutation, useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Link from "next/link";
@@ -8,8 +8,15 @@ import { BASEURL } from "@/service/base";
 
 export default function App() {
   const images = useQuery(api.plants.getPlants);
+  const category = useQuery(api.plants.getPlantCategories)
+
+  const plants = useQuery(api.plants.getPlants);
+ 
+
   const [fullscreenImage, setFullscreenImage] = useState<string | null>(null);
 
+ 
+   
   return (
     <div className="min-h-screen bg-gray-50 p-8">
       <div className="max-w-7xl mx-auto">
@@ -29,26 +36,51 @@ export default function App() {
 
         {/* Plant Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {images?.map((image) => (
-            <div 
-              key={image._id}
-              className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
-            >
-              <div className="relative group">
-                <img 
-                  src={image.url || ""} 
-                  alt={image.common_name}
-                  className="w-full h-64 object-cover cursor-pointer transition-transform duration-300 group-hover:scale-105"
-                  onClick={() => setFullscreenImage(image.url)}
-                />
-                
-              </div>
-              <div className="p-4">
-                <h2 className="text-lg font-semibold text-gray-800">{image.common_name}</h2>
-                <p className="text-sm text-gray-600 mt-1">{image.category}</p>
-              </div>
-            </div>
-          ))}
+          {category?.map((cate) => {
+            const filteredPlants = plants?.filter((plant) => plant.category === cate) || [];
+            return(
+                  <div 
+                    key={cate}
+                    className="bg-white rounded-xl shadow-lg overflow-hidden hover:shadow-xl transition-shadow duration-300"
+                  >
+                    <div className="p-4">
+                      <div>
+                        <div className="flex justify-between items-center mb-4">
+                          <h3 className="text-lg font-semibold text-green-600">{cate}</h3>
+                          <button className="text-gray-600 hover:text-green-600 transition-colors">
+                          <Link href={`upload/${cate}`}>
+                               <span className="text-sm">👁️ View All</span>
+                          </Link>
+                          </button>
+                        </div>
+                        <div className="grid grid-cols-2 gap-3">
+                          {filteredPlants?.length > 0 ? (
+                            filteredPlants.slice(0, 4).map((plant) => (
+                              <div 
+                                key={plant._id} 
+                                className="relative group cursor-pointer"
+                                onClick={() => setFullscreenImage(plant.url as string)}
+                              >
+                                <img 
+                                  src={plant.url as string} 
+                                  alt={plant.common_name} 
+                                  className="w-full h-32 rounded-lg object-cover transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl" 
+                                />
+                                <div className="absolute inset-0  bg-opacity-0 group-hover:bg-opacity-30 transition-opacity duration-300 rounded-lg flex items-center justify-center">
+                                  <span className="text-white opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-center px-2">
+                                    {plant.common_name}
+                                  </span>
+                                </div>
+                              </div>
+                            ))
+                          ) : (
+                            <p className="col-span-2 text-center">No plants found</p>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>  
+           )})}
         </div>
 
         {/* Loading State */}
