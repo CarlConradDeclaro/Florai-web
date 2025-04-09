@@ -92,7 +92,7 @@ const PlantCard = ({ onClose, common_name, imageId }: PlantCardProps) => {
     >
       <div className="w-full h-[70%]">
         <Image
-          width={500} // aspect ratio width
+          width={500}
           height={500}
           src={imageId}
           alt={common_name}
