@@ -165,11 +165,11 @@ const ViewModal = ({ onClose, plant }: ViewModalProps) => {
             <h1></h1>
             <button onClick={updatePlant}>
               <Image
-                width={500} // aspect ratio width
-                height={500}
+                width={30}
+                height={30}
                 src={edit}
                 alt="Edit"
-                className="w-[25px] h-[25px] cursor-pointer"
+                className="cursor-pointer"
               />
             </button>
           </div>

@@ -45,11 +45,11 @@ export default function PlantItem({
           onClick={handleUpdate}
         >
           <Image
-            width={500}
-            height={500}
+            width={25}
+            height={25}
             src={edit}
             alt="Edit"
-            className="w-[25px] h-[25px] cursor-pointer"
+            className="cursor-pointer"
           />
         </button>
         <button
@@ -58,11 +58,11 @@ export default function PlantItem({
           aria-label="Delete plant"
         >
           <Image
-            width={500}
-            height={500}
+            width={30}
+            height={30}
             src={trash}
             alt="Delete"
-            className="w-[30px] h-[30px] cursor-pointer"
+            className="cursor-pointer"
           />
         </button>
       </div>
