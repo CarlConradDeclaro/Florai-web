@@ -16,6 +16,7 @@ import {
   WATERING_NEEDS,
 } from "@/constant/list";
 import Image from "next/image";
+import { BASEURL } from "@/service/base";
 
 export default function PlantUpdateForm() {
   const params = useParams();
@@ -131,7 +132,7 @@ export default function PlantUpdateForm() {
       await updatePlant(updateData);
 
       alert("Plant updated successfully!");
-      router.push("http://localhost:3000"); // Redirect to main page after update
+      router.push(BASEURL); // Redirect to main page after update
     } catch (error) {
       console.error("Error updating plant:", error);
       alert("Failed to update plant");

@@ -23,7 +23,7 @@ function Page({ params }: { params: Promise<{ plant: string }> }) {
       <div className="max-w-7xl mx-auto mt-9  ">
         <div>
           <Link
-            href={BASEURL + "/upload"}
+            href={BASEURL + "/upload/"}
             className="flex items-center text-green-600 hover:text-green-700 transition-colors"
           >
             <svg
