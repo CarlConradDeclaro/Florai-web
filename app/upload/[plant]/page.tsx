@@ -10,7 +10,7 @@ import edit from "../../../assest/edit.png";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
-function page({ params }: { params: Promise<{ plant: string }> }) {
+function Page({ params }: { params: Promise<{ plant: string }> }) {
   const { plant } = use(params);
   const plantData = useQuery(api.plants.getPlants);
   const getPlantByCategory =
@@ -72,7 +72,7 @@ function page({ params }: { params: Promise<{ plant: string }> }) {
             </>
           )}
           {getPlantByCategory.length === 0 && <h1>Fetching plants...</h1>}
-          {openViewModal && (
+          {openViewModal && selectedPlant && (
             <ViewModal
               onClose={() => setOpenViewModal(!openViewModal)}
               plant={selectedPlant}
@@ -91,7 +91,9 @@ const PlantCard = ({ onClose, common_name, imageId }: PlantCardProps) => {
       onClick={onClose}
     >
       <div className="w-full h-[70%]">
-        <img
+        <Image
+          width={500} // aspect ratio width
+          height={500}
           src={imageId}
           alt={common_name}
           className="w-full h-full object-cover"
@@ -108,10 +110,10 @@ const PlantCard = ({ onClose, common_name, imageId }: PlantCardProps) => {
 };
 
 interface Plant {
-  _id: any;
+  _id: string;
   common_name: string;
   description: string;
-  url: any;
+  url: string;
   humidityPreference: string;
   life_span: string;
   medicinalUses: string;
@@ -149,8 +151,11 @@ const ViewModal = ({ onClose, plant }: ViewModalProps) => {
       >
         <div className="w-[50%]">
           <h1>{plant.common_name}</h1>
-          <img
+          <Image
+            alt="plant"
             src={plant.url as string}
+            width={500} // aspect ratio width
+            height={500}
             className="w-full h-[95%] object-fill rounded-2xl"
           />
         </div>
@@ -160,6 +165,8 @@ const ViewModal = ({ onClose, plant }: ViewModalProps) => {
             <h1></h1>
             <button onClick={updatePlant}>
               <Image
+                width={500} // aspect ratio width
+                height={500}
                 src={edit}
                 alt="Edit"
                 className="w-[25px] h-[25px] cursor-pointer"
@@ -181,4 +188,4 @@ const ViewModal = ({ onClose, plant }: ViewModalProps) => {
   );
 };
 
-export default page;
+export default Page;

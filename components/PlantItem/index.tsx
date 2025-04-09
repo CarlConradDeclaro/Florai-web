@@ -25,9 +25,12 @@ export default function PlantItem({
     <div className="grid grid-cols-4 items-center p-4 hover:bg-gray-50 transition-colors">
       <div className="flex items-center">
         <div className="w-12 h-12 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
-          <img
+          <Image
             src={img}
             alt={common_name}
+            width={500} // aspect ratio width
+            height={500} // aspect ratio height
+            layout="responsive" // allows responsive resizing
             className="w-full h-full object-cover"
             onClick={() => setOpenModal(true)}
           />

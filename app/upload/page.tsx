@@ -5,6 +5,7 @@ import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Link from "next/link";
 import { BASEURL } from "@/service/base";
+import Image from "next/image";
 
 export default function App() {
   const images = useQuery(api.plants.getPlants);
@@ -76,7 +77,9 @@ export default function App() {
                               setFullscreenImage(plant.url as string)
                             }
                           >
-                            <img
+                            <Image
+                              width={500} // aspect ratio width
+                              height={500}
                               src={plant.url as string}
                               alt={plant.common_name}
                               className="w-full h-32 rounded-lg object-cover transform transition-all duration-300 group-hover:scale-105 group-hover:shadow-xl"
@@ -129,7 +132,9 @@ export default function App() {
           onClick={() => setFullscreenImage(null)}
         >
           <div className="relative max-w-5xl w-full">
-            <img
+            <Image
+              width={500} // aspect ratio width
+              height={500}
               src={fullscreenImage}
               alt="Fullscreen"
               className="w-full h-auto rounded-lg shadow-2xl"

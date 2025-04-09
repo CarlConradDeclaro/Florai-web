@@ -27,7 +27,6 @@ function Snackbar({
 
 // Your component that uses snackbars
 function MyApp({
-  variant,
   handleClick,
 }: {
   variant: VariantType;

@@ -1,14 +1,12 @@
 "use client";
 import React, { useState, useEffect } from "react";
 import { useParams, useRouter } from "next/navigation";
-import Image from "next/image";
 import { Button } from "@mui/material";
 import { TextField } from "@/components/TextField";
 import { Select } from "@/components/Select";
 import { UploadButton } from "@/components/UploadButton";
 import { api } from "@/convex/_generated/api";
 import { useMutation, useQuery } from "convex/react";
-import { SnackbarProvider, useSnackbar } from "notistack";
 import {
   CATEGORY,
   HUMIDITY_PREFERENCE,
@@ -17,6 +15,7 @@ import {
   SUNLIGHT,
   WATERING_NEEDS,
 } from "@/constant/list";
+import Image from "next/image";
 
 export default function PlantUpdateForm() {
   const params = useParams();
@@ -206,7 +205,9 @@ export default function PlantUpdateForm() {
                 </label>
                 {previewImage ? (
                   <div className="relative group">
-                    <img
+                    <Image
+                      width={500} // aspect ratio width
+                      height={500}
                       src={previewImage}
                       alt="Plant preview"
                       className="w-[150px] h-[150px] object-cover rounded-lg"
