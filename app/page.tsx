@@ -5,10 +5,8 @@ import { TextField } from "@/components/TextField";
 import { UploadButton } from "@/components/UploadButton";
 import {
   CATEGORY,
-  CULINARY_USE,
   HUMIDITY_PREFERENCE,
   LIFE_SPAN,
-  MEDICINAL_USES,
   PLANT_TYPE,
   SUNLIGHT,
   WATERING_NEEDS,
@@ -18,9 +16,6 @@ import { Button } from "@mui/material";
 import { useMutation, useQuery } from "convex/react";
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
-import edit from "../assest/edit.png";
-import trash from "../assest/trash.png";
-import Image from "next/image";
 import { SnackbarProvider, useSnackbar } from "notistack";
 import PlantItem from "@/components/PlantItem";
 import { PlantDeleteParams } from "@/Interface/Plant";
