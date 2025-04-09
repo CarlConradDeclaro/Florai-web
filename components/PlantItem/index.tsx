@@ -1,8 +1,8 @@
 import { PlantItemProps } from "@/Interface/Plant";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
-import edit from "../../assest/edit.png";
-import trash from "../../assest/trash.png";
+import edit from "../../asset/edit.png";
+import trash from "../../asset/trash.png";
 import { Modal } from "../Modal";
 import { useRouter } from "next/navigation";
 

@@ -2,7 +2,7 @@ import React from "react";
 import { SnackbarProvider, useSnackbar, VariantType } from "notistack";
 import Button from "@mui/material/Button"; // Assuming you're using Material UI
 import Image from "next/image";
-import trash from "../../assest/trash.png"; // Fixed the path for trash icon
+import trash from "../../asset/trash.png"; // Fixed the path for trash icon
 
 // Set up the SnackbarProvider at the app's root
 function Snackbar({
