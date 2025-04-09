@@ -51,6 +51,7 @@ function PlantManagement() {
     medicinalUses: "",
     culinaryUse: "",
   });
+  const [submitLoading, setSubmitLoading] = useState(false);
 
   // Image state hooks
   const [previewImage, setPreviewImage] = useState<string | null>(null);
@@ -102,6 +103,7 @@ function PlantManagement() {
       enqueueSnackbar("Please select an image", { variant: "warning" });
       return;
     }
+    setSubmitLoading(true);
 
     try {
       const postUrl = await generateUploadUrl();
@@ -131,6 +133,7 @@ function PlantManagement() {
 
       resetForm();
       enqueueSnackbar("Plant added successfully!", { variant: "success" });
+      setSubmitLoading(false);
     } catch (error) {
       console.error("Error adding plant:", error);
       enqueueSnackbar("Failed to add plant", { variant: "error" });
@@ -217,6 +220,8 @@ function PlantManagement() {
                 {previewImage ? (
                   <div className="relative group">
                     <Image
+                      width={500} // aspect ratio width
+                      height={500}
                       onClick={() => setImageUrl(previewImage)}
                       src={previewImage}
                       alt="preview"
@@ -277,7 +282,7 @@ function PlantManagement() {
                 className="bg-green-600 hover:bg-green-700"
                 disabled={!selectedImage}
               >
-                Submit Plant
+                {submitLoading ? "Submitting..." : "Submit Plant"}
               </Button>
             </div>
           </div>

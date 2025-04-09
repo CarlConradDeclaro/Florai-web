@@ -45,6 +45,8 @@ export default function PlantItem({
           onClick={handleUpdate}
         >
           <Image
+            width={500}
+            height={500}
             src={edit}
             alt="Edit"
             className="w-[25px] h-[25px] cursor-pointer"
@@ -56,6 +58,8 @@ export default function PlantItem({
           aria-label="Delete plant"
         >
           <Image
+            width={500}
+            height={500}
             src={trash}
             alt="Delete"
             className="w-[30px] h-[30px] cursor-pointer"
