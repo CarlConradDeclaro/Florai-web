@@ -22,6 +22,8 @@ import edit from "../assest/edit.png";
 import trash from "../assest/trash.png";
 import Image from "next/image";
 import { SnackbarProvider, useSnackbar } from "notistack";
+import PlantItem from "@/components/PlantItem";
+import { PlantDeleteParams } from "@/Interface/Plant";
 
 export default function Page() {
   return (
@@ -39,26 +41,37 @@ export default function Page() {
 }
 
 function PlantManagement() {
-  const [commonName, setCommonName] = useState<string>("");
-  const [Scientific, setScientific] = useState<string>("");
-  const [Description, setDescription] = useState<string>("");
-  const [category, setCategory] = useState<string>("");
-  const [plantType, setPlantType] = useState<string>("");
-  const [lifespan, setLifespan] = useState<string>("");
-  const [sunlight, setSunlight] = useState<string>("");
-  const [wateringNeeds, setWateringNeeds] = useState<string>("");
-  const [humidityPreference, setHumidityPreference] = useState<string>("");
-  const [medicinalUses, setMedicinalUses] = useState<string>("");
-  const [culinaryUse, setCulinaryUse] = useState<string>("");
-  const [openModal, setOpenModal] = useState<boolean>(false);
+  // Form state hooks
+  const [formData, setFormData] = useState({
+    commonName: "",
+    scientific: "",
+    description: "",
+    category: "",
+    plantType: "",
+    lifespan: "",
+    sunlight: "",
+    wateringNeeds: "",
+    humidityPreference: "",
+    medicinalUses: "",
+    culinaryUse: "",
+  });
+
+  // Image state hooks
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [imageUrl, setImageUrl] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);
 
+  // Convex API hooks
   const sendPlantDetails = useMutation(api.plants.sendPlantDetails);
   const generateUploadUrl = useMutation(api.plants.generateUploadUrl);
   const deletePlant = useMutation(api.plants.deletePlant);
   const plants = useQuery(api.plants.getPlants);
+  const { enqueueSnackbar } = useSnackbar();
+
+  // Handle form field changes
+  const handleInputChange = (field: string, value: string) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+  };
 
   const handleFileChange = (files: FileList | null) => {
     if (files && files[0]) {
@@ -67,17 +80,39 @@ function PlantManagement() {
       setSelectedImage(files[0]);
     }
   };
-  const { enqueueSnackbar } = useSnackbar();
+
+  const resetForm = () => {
+    setFormData({
+      commonName: "",
+      scientific: "",
+      description: "",
+      category: "",
+      plantType: "",
+      lifespan: "",
+      sunlight: "",
+      wateringNeeds: "",
+      humidityPreference: "",
+      medicinalUses: "",
+      culinaryUse: "",
+    });
+    setSelectedImage(null);
+    setPreviewImage(null);
+  };
 
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
+
+    if (!selectedImage) {
+      enqueueSnackbar("Please select an image", { variant: "warning" });
+      return;
+    }
 
     try {
       const postUrl = await generateUploadUrl();
 
       const result = await fetch(postUrl, {
         method: "POST",
-        headers: { "Content-Type": selectedImage!.type },
+        headers: { "Content-Type": selectedImage.type },
         body: selectedImage,
       });
 
@@ -85,36 +120,23 @@ function PlantManagement() {
 
       await sendPlantDetails({
         storageId,
-        common_name: commonName,
-        scientific_name: Scientific,
-        description: Description,
-        category: category,
-        plant_Type: plantType,
-        life_span: lifespan,
-        sunlight: sunlight,
-        wateringNeeds: wateringNeeds,
-        humidityPreference: humidityPreference,
-        medicinalUses: medicinalUses,
-        culinaryUse: culinaryUse,
+        common_name: formData.commonName,
+        scientific_name: formData.scientific,
+        description: formData.description,
+        category: formData.category,
+        plant_Type: formData.plantType,
+        life_span: formData.lifespan,
+        sunlight: formData.sunlight,
+        wateringNeeds: formData.wateringNeeds,
+        humidityPreference: formData.humidityPreference,
+        medicinalUses: formData.medicinalUses,
+        culinaryUse: formData.culinaryUse,
       });
 
-      setSelectedImage(null);
-      setPreviewImage(null);
-      setCommonName("");
-      setScientific("");
-      setDescription("");
-      setCategory("");
-      setPlantType("");
-      setLifespan("");
-      setSunlight("");
-      setWateringNeeds("");
-      setHumidityPreference("");
-      setMedicinalUses("");
-      setCulinaryUse("");
-
-      // Replace alert with snackbar
+      resetForm();
       enqueueSnackbar("Plant added successfully!", { variant: "success" });
     } catch (error) {
+      console.error("Error adding plant:", error);
       enqueueSnackbar("Failed to add plant", { variant: "error" });
     }
   }
@@ -122,24 +144,46 @@ function PlantManagement() {
   const handleDeletePlant = async ({
     plantId,
     plantName,
-  }: {
-    plantId: any;
-    plantName?: string;
-  }) => {
-    console.log("id: ", plantId);
-
+  }: PlantDeleteParams) => {
     try {
       await deletePlant({ id: plantId });
-      // Show success message with snackbar
       enqueueSnackbar(`${plantName || "Plant"} deleted successfully`, {
         variant: "success",
       });
     } catch (error) {
-      // Show error message with snackbar
+      console.error("Error deleting plant:", error);
       enqueueSnackbar("Error deleting plant", { variant: "error" });
-      console.log("error to delete the plant");
     }
   };
+
+  const renderFormField = (
+    label: string,
+    fieldName: keyof typeof formData,
+    component: "textfield" | "select",
+    options?: string[]
+  ) => (
+    <div className="flex items-center gap-4">
+      <label className="font-medium text-gray-700 w-32 text-right">
+        {label}:
+      </label>
+      {component === "textfield" ? (
+        <TextField
+          size="small"
+          label={label}
+          value={formData[fieldName]}
+          onChange={(e) => handleInputChange(fieldName, e.target.value)}
+        />
+      ) : (
+        <Select
+          items={options || []}
+          value={formData[fieldName]}
+          onChange={(e) => handleInputChange(fieldName, e.target.value)}
+        />
+      )}
+    </div>
+  );
+
+  const isLoading = plants === undefined;
 
   return (
     <div className="min-h-screen bg-gray-50 p-8">
@@ -166,41 +210,10 @@ function PlantManagement() {
               General Information
             </h2>
             <div className="space-y-6">
-              <div className="flex items-center gap-4">
-                <label className="font-medium text-gray-700 w-32 text-right">
-                  Common Name:
-                </label>
-                <TextField
-                  id="outlined-basic"
-                  size="small"
-                  label="Common Name"
-                  value={commonName}
-                  onChange={(e) => setCommonName(e.target.value)}
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <label className="font-medium text-gray-700 w-32 text-right">
-                  Scientific Name:
-                </label>
-                <TextField
-                  size="small"
-                  label="Scientific Name"
-                  value={Scientific}
-                  onChange={(e) => setScientific(e.target.value)}
-                />
-              </div>
-              <div className="flex items-center gap-4">
-                <label className="font-medium text-gray-700 w-32 text-right">
-                  Description:
-                </label>
-                <TextField
-                  id="outlined-multiline-static"
-                  size="small"
-                  label="Description"
-                  value={Description}
-                  onChange={(e) => setDescription(e.target.value)}
-                />
-              </div>
+              {renderFormField("Common Name", "commonName", "textfield")}
+              {renderFormField("Scientific Name", "scientific", "textfield")}
+              {renderFormField("Description", "description", "textfield")}
+
               <div className="flex items-center gap-4">
                 <label className="font-medium text-gray-700 w-32 text-right">
                   Upload Image:
@@ -216,6 +229,8 @@ function PlantManagement() {
                     <button
                       className="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-opacity"
                       onClick={() => setPreviewImage(null)}
+                      type="button"
+                      aria-label="Remove image"
                     >
                       ×
                     </button>
@@ -234,68 +249,29 @@ function PlantManagement() {
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Category:
-                  </label>
-                  <Select
-                    items={CATEGORY}
-                    value={category}
-                    onChange={(e) => setCategory(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Plant Type:
-                  </label>
-                  <Select
-                    items={PLANT_TYPE}
-                    value={plantType}
-                    onChange={(e) => setPlantType(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Lifespan:
-                  </label>
-                  <Select
-                    items={LIFE_SPAN}
-                    value={lifespan}
-                    onChange={(e) => setLifespan(e.target.value)}
-                  />
-                </div>
+                {renderFormField("Category", "category", "select", CATEGORY)}
+                {renderFormField(
+                  "Plant Type",
+                  "plantType",
+                  "select",
+                  PLANT_TYPE
+                )}
+                {renderFormField("Lifespan", "lifespan", "select", LIFE_SPAN)}
               </div>
               <div className="space-y-6">
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Sunlight:
-                  </label>
-                  <Select
-                    items={SUNLIGHT}
-                    value={sunlight}
-                    onChange={(e) => setSunlight(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Watering:
-                  </label>
-                  <Select
-                    items={WATERING_NEEDS}
-                    value={wateringNeeds}
-                    onChange={(e) => setWateringNeeds(e.target.value)}
-                  />
-                </div>
-                <div className="flex items-center gap-4">
-                  <label className="font-medium text-gray-700 w-32 text-right">
-                    Humidity:
-                  </label>
-                  <Select
-                    items={HUMIDITY_PREFERENCE}
-                    value={humidityPreference}
-                    onChange={(e) => setHumidityPreference(e.target.value)}
-                  />
-                </div>
+                {renderFormField("Sunlight", "sunlight", "select", SUNLIGHT)}
+                {renderFormField(
+                  "Watering",
+                  "wateringNeeds",
+                  "select",
+                  WATERING_NEEDS
+                )}
+                {renderFormField(
+                  "Humidity",
+                  "humidityPreference",
+                  "select",
+                  HUMIDITY_PREFERENCE
+                )}
               </div>
             </div>
             <div className="mt-8 flex justify-end">
@@ -303,6 +279,7 @@ function PlantManagement() {
                 variant="contained"
                 onClick={handleSubmit}
                 className="bg-green-600 hover:bg-green-700"
+                disabled={!selectedImage}
               >
                 Submit Plant
               </Button>
@@ -311,8 +288,8 @@ function PlantManagement() {
         </div>
 
         {/* Plant List */}
-        <div className="mt-18 ">
-          <div className="h-[90vh] rounded-xl shadow-lg overflow-auto  bg-white">
+        <div className="mt-8">
+          <div className="h-[90vh] rounded-xl shadow-lg overflow-auto bg-white">
             <div className="p-6 border-b border-gray-200">
               <h2 className="text-xl font-semibold text-gray-800">
                 Recent Plants
@@ -329,7 +306,7 @@ function PlantManagement() {
                   <div className="p-4 font-medium text-gray-700">Actions</div>
                 </div>
                 <div className="divide-y divide-gray-200">
-                  {!plants && (
+                  {isLoading && (
                     <div className="flex items-center justify-center h-64">
                       <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600"></div>
                     </div>
@@ -339,17 +316,20 @@ function PlantManagement() {
                       No plants found
                     </div>
                   )}
-                  {plants
-                    ?.slice()
-                    .reverse()
-                    .map((plant) => (
-                      <Item
+                  {plants &&
+                    plants.length > 0 &&
+                    [...plants].reverse().map((plant) => (
+                      <PlantItem
                         key={plant._id}
+                        plantId={plant._id}
                         img={plant.url as string}
                         common_name={plant.common_name}
                         category={plant.category}
                         onDeletePlant={() =>
-                          handleDeletePlant({ plantId: plant._id })
+                          handleDeletePlant({
+                            plantId: plant._id,
+                            plantName: plant.common_name,
+                          })
                         }
                       />
                     ))}
@@ -366,57 +346,3 @@ function PlantManagement() {
     </div>
   );
 }
-
-const Item = ({
-  img,
-  common_name,
-  category,
-  onDeletePlant,
-}: {
-  img: string;
-  common_name: string;
-  category: string;
-  onDeletePlant: () => void;
-}) => {
-  const [openModal, setOpenModal] = useState(false);
-
-  return (
-    <div className="grid grid-cols-4 items-center p-4 hover:bg-gray-50 transition-colors">
-      <div className="flex items-center">
-        <div className="w-12 h-12 rounded-lg overflow-hidden cursor-pointer hover:opacity-90 transition-opacity">
-          <img
-            src={img}
-            alt={common_name}
-            className="w-full h-full object-cover"
-            onClick={() => setOpenModal(true)}
-          />
-        </div>
-      </div>
-      <div className="font-bold text-gray-800  ">{common_name}</div>
-      <div className="text-gray-600 font-bold">{category}</div>
-      <div className="flex gap-2 justify-center">
-        <button className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors">
-          <Image
-            src={edit}
-            alt="edit"
-            className="w-[25px] h-[25px] cursor-pointer"
-          />
-        </button>
-        <button
-          className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-          onClick={onDeletePlant}
-        >
-          <Image
-            src={trash}
-            alt="edit"
-            className="w-[30px] h-[30px] cursor-pointer"
-          />
-        </button>
-      </div>
-
-      {openModal && (
-        <Modal imageUrl={img} onClose={() => setOpenModal(false)} />
-      )}
-    </div>
-  );
-};
