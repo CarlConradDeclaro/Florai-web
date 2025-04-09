@@ -1,8 +1,7 @@
 import { PlantItemProps } from "@/Interface/Plant";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
-import edit from "../../asset/edit.png";
-import trash from "../../asset/trash.png";
+
 import { Modal } from "../Modal";
 import { useRouter } from "next/navigation";
 
@@ -47,7 +46,7 @@ export default function PlantItem({
           <Image
             width={25}
             height={25}
-            src={edit}
+            src="/edit.png"
             alt="Edit"
             className="cursor-pointer"
           />
@@ -60,7 +59,7 @@ export default function PlantItem({
           <Image
             width={30}
             height={30}
-            src={trash}
+            src="/trash.png"
             alt="Delete"
             className="cursor-pointer"
           />

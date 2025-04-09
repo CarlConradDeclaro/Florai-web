@@ -6,7 +6,7 @@ import { BASEURL } from "@/service/base";
 import { useQuery } from "convex/react";
 import Link from "next/link";
 import React, { use } from "react";
-import edit from "../../../asset/edit.png";
+
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 
@@ -167,7 +167,7 @@ const ViewModal = ({ onClose, plant }: ViewModalProps) => {
               <Image
                 width={30}
                 height={30}
-                src={edit}
+                src="/edit.png"
                 alt="Edit"
                 className="cursor-pointer"
               />
