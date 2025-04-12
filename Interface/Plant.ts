@@ -24,3 +24,22 @@ export interface PlantCardProps {
   sunlight: string;
   wateringNeeds: string;
 }
+
+export interface Plant {
+  _id: string;
+  common_name: string;
+  description: string;
+  url: string;
+  humidityPreference: string;
+  life_span: string;
+  medicinalUses: string;
+  plant_Type: string;
+  scientific_name: string;
+  sunlight: string;
+  wateringNeeds: string;
+}
+
+export interface ViewModalProps {
+  onClose: () => void;
+  plant: Plant;
+}
