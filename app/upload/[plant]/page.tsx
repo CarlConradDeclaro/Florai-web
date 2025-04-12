@@ -1,7 +1,7 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { PlantCardProps } from "@/Interface/Plant";
+import { Plant, PlantCardProps, ViewModalProps } from "@/Interface/Plant";
 import { BASEURL } from "@/service/base";
 import { useQuery } from "convex/react";
 import Link from "next/link";
@@ -108,25 +108,6 @@ const PlantCard = ({ onClose, common_name, imageId }: PlantCardProps) => {
     </div>
   );
 };
-
-interface Plant {
-  _id: string;
-  common_name: string;
-  description: string;
-  url: string;
-  humidityPreference: string;
-  life_span: string;
-  medicinalUses: string;
-  plant_Type: string;
-  scientific_name: string;
-  sunlight: string;
-  wateringNeeds: string;
-}
-
-interface ViewModalProps {
-  onClose: () => void;
-  plant: Plant;
-}
 
 const ViewModal = ({ onClose, plant }: ViewModalProps) => {
   const router = useRouter();
