@@ -1,3 +1,5 @@
+import { StaticImageData } from "next/image";
+
 export interface PlantItemProps {
   plantId: any;
   img: string;
@@ -43,3 +45,16 @@ export interface ViewModalProps {
   onClose: () => void;
   plant: Plant;
 }
+
+export interface Card {
+  title: string;
+  description: string;
+  url: StaticImageData;
+  path: string;
+  delay: number;
+}
+
+export type DiseaseResult = {
+  leaf_condition: string;
+  confidence: string;
+};

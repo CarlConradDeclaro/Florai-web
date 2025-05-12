@@ -16,7 +16,7 @@ import {
   WATERING_NEEDS,
 } from "@/constant/list";
 import Image from "next/image";
-import { BASEURL } from "@/service/base";
+import { BASEURL } from "@/lib/base";
 
 export default function PlantUpdateForm() {
   const params = useParams();
@@ -37,7 +37,6 @@ export default function PlantUpdateForm() {
     medicinalUses: "",
     culinaryUse: "",
   });
-
   // State for image handling
   const [previewImage, setPreviewImage] = useState<string | null>(null);
   const [selectedImage, setSelectedImage] = useState<File | null>(null);

@@ -1,12 +1,14 @@
+"use client";
+
 import FeatureSection from "@/components/FeatureSection";
 import AppDownload from "@/components/FeatureSection/App-Download";
 import HeroSection from "@/components/HeroSection";
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 function index() {
   return (
-    <div>
-      <div className="p-5">
+    <div className={`min-h-screen transition-all duration-300 `}>
+      <div>
         <HeroSection />
       </div>
       <div>

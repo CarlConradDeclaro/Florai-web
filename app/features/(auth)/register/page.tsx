@@ -1,19 +1,20 @@
 "use client";
 
-import { UserForm } from "@/types/user";
-import { login } from "@/service/Auth";
+import { register } from "@/service/Auth";
+import { UserFormRegister } from "@/types/user";
 import { useRouter } from "next/navigation";
 import React, { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import Image from "next/image";
 
-const Login = () => {
+const Register = () => {
   const router = useRouter();
-  const [userForm, setUserForm] = useState<UserForm>({
+  const [userForm, setUserForm] = useState<UserFormRegister>({
     email: "",
+    username: "",
     password: "",
+    password2: "",
   });
-
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
   const [mounted, setMounted] = useState(false);
@@ -26,15 +27,15 @@ const Login = () => {
     setUserForm((prev) => ({ ...prev, [field]: value }));
   };
 
-  const handleLogin = async () => {
+  const handleRegister = async () => {
     setLoading(true);
     try {
-      const response = await login(userForm);
+      const res = await register(userForm);
 
-      if (response?.data) {
-        router.push("/features/homepage");
+      if (res?.data) {
+        console.log("success");
+        router.push("/features/login");
       }
-      console.log("User:", response?.data.email);
     } catch (error) {
       console.log(error);
     } finally {
@@ -71,13 +72,15 @@ const Login = () => {
 
   return (
     <div className="flex min-h-screen bg-white font-sans">
-      {/* Login container */}
+      {/* Subtle background pattern */}
+
+      {/* Registration container */}
       <div className="relative w-full max-w-md mx-auto flex flex-col justify-center px-4 z-10">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-12 flex justify-center"
+          className="mb-8 flex justify-center"
         >
           <motion.div
             className="flex items-center cursor-pointer"
@@ -112,38 +115,43 @@ const Login = () => {
           className="bg-white rounded-xl p-8 shadow-sm border border-gray-100"
         >
           <motion.div variants={itemVariants} className="mb-6">
-            <h1 className="text-2xl font-medium text-gray-800">Sign in</h1>
-            <p className="text-gray-500 text-sm mt-1">Welcome back to FlorAI</p>
+            <h1 className="text-2xl font-medium text-gray-800">
+              Create account
+            </h1>
+            <p className="text-gray-500 text-sm mt-1">
+              Join the FlorAI community today
+            </p>
           </motion.div>
 
-          <motion.div variants={itemVariants} className="space-y-5">
+          <motion.div variants={itemVariants} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
                 Email
               </label>
-              <div className="relative">
-                <input
-                  type="email"
-                  className="w-full py-2 px-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
-                  placeholder="name@example.com"
-                  onChange={(e) => handleChange("email", e.target.value)}
-                />
-              </div>
+              <input
+                type="email"
+                className="w-full py-2 px-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                placeholder="name@example.com"
+                onChange={(e) => handleChange("email", e.target.value)}
+              />
             </div>
 
             <div>
-              <div className="flex items-center justify-between mb-1">
-                <label className="block text-sm font-medium text-gray-700">
-                  Password
-                </label>
-                <motion.a
-                  href="#"
-                  className="text-xs text-green-600 hover:text-green-700"
-                  whileHover={{ x: 2 }}
-                >
-                  Forgot password?
-                </motion.a>
-              </div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Username
+              </label>
+              <input
+                type="text"
+                className="w-full py-2 px-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                placeholder="Your username"
+                onChange={(e) => handleChange("username", e.target.value)}
+              />
+            </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Password
+              </label>
               <div className="relative">
                 <input
                   type={showPassword ? "text" : "password"}
@@ -188,11 +196,23 @@ const Login = () => {
                 </button>
               </div>
             </div>
+
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+                Confirm password
+              </label>
+              <input
+                type={showPassword ? "text" : "password"}
+                className="w-full py-2 px-3 text-gray-700 bg-gray-50 border border-gray-200 rounded-md focus:outline-none focus:ring-1 focus:ring-green-500 focus:border-green-500 transition-all duration-200"
+                placeholder="••••••••"
+                onChange={(e) => handleChange("password2", e.target.value)}
+              />
+            </div>
           </motion.div>
 
           <motion.div variants={itemVariants} className="mt-6">
             <motion.button
-              onClick={handleLogin}
+              onClick={handleRegister}
               disabled={loading}
               className="w-full py-2 px-4 bg-green-600 text-white rounded-md shadow-sm font-medium transition-all duration-200"
               variants={buttonVariants}
@@ -210,10 +230,10 @@ const Login = () => {
                       ease: "linear",
                     }}
                   />
-                  <span>Signing in</span>
+                  <span>Creating account</span>
                 </div>
               ) : (
-                "Sign in"
+                "Create account"
               )}
             </motion.button>
           </motion.div>
@@ -224,16 +244,16 @@ const Login = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.5 }}
-          className="mt-6 text-center"
+          className="mt-4 text-center"
         >
           <p className="text-gray-500 text-sm">
-            Don't have an account?{" "}
+            Already have an account?{" "}
             <motion.a
-              href="/features/register"
+              href="/features/login"
               className="text-green-600 font-medium hover:text-green-700"
               whileHover={{ x: 1 }}
             >
-              Sign up
+              Sign in
             </motion.a>
           </p>
         </motion.div>
@@ -242,37 +262,30 @@ const Login = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.8, duration: 0.5 }}
-          className="mt-16 text-center"
+          className="mt-12 text-center"
         >
-          <motion.div
-            className="inline-flex items-center space-x-4 opacity-50"
-            whileHover={{ opacity: 0.7 }}
-          >
+          <p className="text-xs text-gray-400">
+            By creating an account, you agree to our{" "}
             <motion.a
               href="#"
-              className="text-xs text-gray-500 hover:text-gray-700"
+              className="text-green-600 hover:text-green-700"
+              whileHover={{ x: 1 }}
             >
-              Privacy
-            </motion.a>
-            <motion.div className="w-1 h-1 rounded-full bg-gray-300" />
+              Terms of Service
+            </motion.a>{" "}
+            and{" "}
             <motion.a
               href="#"
-              className="text-xs text-gray-500 hover:text-gray-700"
+              className="text-green-600 hover:text-green-700"
+              whileHover={{ x: 1 }}
             >
-              Terms
+              Privacy Policy
             </motion.a>
-            <motion.div className="w-1 h-1 rounded-full bg-gray-300" />
-            <motion.a
-              href="#"
-              className="text-xs text-gray-500 hover:text-gray-700"
-            >
-              Help
-            </motion.a>
-          </motion.div>
+          </p>
         </motion.div>
       </div>
     </div>
   );
 };
 
-export default Login;
+export default Register;

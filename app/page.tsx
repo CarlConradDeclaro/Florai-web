@@ -19,7 +19,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { SnackbarProvider, useSnackbar } from "notistack";
 import PlantItem from "@/components/PlantItem";
-import { PlantDeleteParams } from "@/Interface/Plant";
+import { PlantDeleteParams } from "@/types/Plant";
 
 export default function Page() {
   return (

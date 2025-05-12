@@ -4,8 +4,8 @@ import { useState } from "react";
 import { useQuery } from "convex/react";
 import { api } from "../../convex/_generated/api";
 import Link from "next/link";
-import { BASEURL } from "@/service/base";
 import Image from "next/image";
+import { BASEURL } from "@/lib/base";
 
 export default function App() {
   const images = useQuery(api.plants.getPlants);
