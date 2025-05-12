@@ -1,14 +1,14 @@
 "use client";
 
 import { api } from "@/convex/_generated/api";
-import { Plant, PlantCardProps, ViewModalProps } from "@/Interface/Plant";
-import { BASEURL } from "@/service/base";
+import { Plant, PlantCardProps, ViewModalProps } from "@/types/Plant";
 import { useQuery } from "convex/react";
 import Link from "next/link";
 import React, { use } from "react";
 
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { BASEURL } from "@/lib/base";
 
 function Page({ params }: { params: Promise<{ plant: string }> }) {
   const { plant } = use(params);

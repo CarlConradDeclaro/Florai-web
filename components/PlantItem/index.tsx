@@ -1,4 +1,4 @@
-import { PlantItemProps } from "@/Interface/Plant";
+import { PlantItemProps } from "@/types/Plant";
 import Image from "next/image";
 import { MouseEvent, useState } from "react";
 
