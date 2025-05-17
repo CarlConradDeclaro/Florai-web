@@ -164,7 +164,7 @@ const AppDownload = () => {
           <motion.div className="md:w-1/2" style={{ opacity, scale }}>
             <div className="relative flex justify-center z-10">
               <motion.div
-                className="transform -rotate-3 mr-4 shadow-2xl"
+                className="transform -rotate-3 mr-4 "
                 initial={{ x: -100, opacity: 0, rotateZ: -10 }}
                 animate={{ x: 0, opacity: 1, rotateZ: -3 }}
                 transition={{
@@ -182,7 +182,7 @@ const AppDownload = () => {
                 />
               </motion.div>
               <motion.div
-                className="transform rotate-3 shadow-2xl"
+                className="transform rotate-3  "
                 initial={{ x: 100, opacity: 0, rotateZ: 10 }}
                 animate={{ x: 0, opacity: 1, rotateZ: 3 }}
                 transition={{

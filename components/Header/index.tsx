@@ -179,14 +179,14 @@ function Header() {
               >
                 <Image src={item.icon} alt={item.name} className="w-5 h-5" />
                 <span
-                  className={`${activeLink === item.name ? "font-medium" : "font-extralight"} transition-all duration-200`}
+                  className={`${activeLink === item.name ? "font-medium " : "font-extralight"} transition-all duration-200`}
                 >
                   {item.name}
                 </span>
 
                 {/* Animated underline */}
                 <motion.div
-                  className={`absolute bottom-0 left-0 h-0.5 w-0 bg-green-500 group-hover:w-full transition-all duration-300 ${
+                  className={`absolute bottom-0 left-0 h-0.5 w-0  group-hover:w-full transition-all duration-300 ${
                     activeLink === item.name ? "w-full" : "w-0"
                   }`}
                   layoutId="underline"

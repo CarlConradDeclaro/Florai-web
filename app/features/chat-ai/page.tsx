@@ -10,21 +10,20 @@ import { IoIosSend } from "react-icons/io";
 import { useRouter } from "next/navigation";
 import withAuth from "@/lib/withAuth";
 import { motion, AnimatePresence } from "framer-motion";
+import { get_ai_chat_response } from "@/service/ai-chatbot";
 
-// Define conversation message types
 interface Message {
   id: string;
   sender: "user" | "ai";
   content: string;
   timestamp: Date;
-  // For AI messages that contain plant data
+
   introMarkdown?: string;
   jsonPlants?: Plant[];
   summaryMarkdown?: string;
   status?: string;
 }
 
-// Interface for API response
 interface ApiResponse {
   introduction: string;
   relevant_plants: Plant[];
@@ -38,7 +37,6 @@ const Chat_Ai = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [closeSidebar, setCloseSidebar] = useState(false);
 
-  // Animation states for simulated streaming
   const [isShowingIntro, setIsShowingIntro] = useState(false);
   const [isShowingPlants, setIsShowingPlants] = useState(false);
   const [isShowingSummary, setIsShowingSummary] = useState(false);
@@ -49,7 +47,6 @@ const Chat_Ai = () => {
   const messageEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Scroll to bottom whenever conversations change
   useEffect(() => {
     messageEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [conversations]);
@@ -67,7 +64,6 @@ const Chat_Ai = () => {
   const sendMessage = () => {
     if (!prompt.trim() || isLoading) return;
 
-    // Add user message to conversations
     const newUserMessage: Message = {
       id: Date.now().toString(),
       sender: "user",
@@ -80,17 +76,14 @@ const Chat_Ai = () => {
       newUserMessage,
     ]);
 
-    // Clear input field
     setPrompt("");
 
-    // Start fetching AI response
     fetchResponse(prompt);
   };
 
   const fetchResponse = async (userPrompt: string) => {
     setIsLoading(true);
 
-    // Create a placeholder for AI response
     const aiMessageId = (Date.now() + 1).toString();
     setCurrentAiMessageId(aiMessageId);
 
@@ -105,16 +98,7 @@ const Chat_Ai = () => {
     setConversations((prev) => [...prev, aiMessage]);
 
     try {
-      const res = await fetch(`http://localhost:8000/ai-deepseek2_json/`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          new_message: userPrompt,
-          conversation: conversations,
-        }),
-      });
+      const res = await get_ai_chat_response(userPrompt, conversations);
 
       if (!res.ok) {
         updateAIMessage(aiMessageId, {
@@ -126,22 +110,17 @@ const Chat_Ai = () => {
 
       const data: ApiResponse = await res.json();
 
-      // Simulate streaming with staggered reveal
-
-      // First show the intro with typing effect
       updateAIMessage(aiMessageId, {
         status: "processing...",
       });
       setIsShowingIntro(true);
 
-      // After a delay, update with the intro
       setTimeout(() => {
         updateAIMessage(aiMessageId, {
           introMarkdown: data.introduction,
           status: "Finding the best plants for you...",
         });
 
-        // After another delay, show the plants
         setTimeout(() => {
           setIsShowingPlants(true);
           updateAIMessage(aiMessageId, {
@@ -149,7 +128,6 @@ const Chat_Ai = () => {
             status: "processing...",
           });
 
-          // After plants are shown, show the summary
           setTimeout(() => {
             setIsShowingSummary(true);
             updateAIMessage(aiMessageId, {
@@ -158,16 +136,15 @@ const Chat_Ai = () => {
             });
             setIsLoading(false);
 
-            // Reset animation states after a delay
             setTimeout(() => {
               setIsShowingIntro(false);
               setIsShowingPlants(false);
               setIsShowingSummary(false);
               setCurrentAiMessageId(null);
             }, 1000);
-          }, 1500); // Delay before summary
-        }, 1200); // Delay before plants
-      }, 1000); // Delay before intro
+          }, 1500);
+        }, 1200);
+      }, 1000);
     } catch (error) {
       console.error("Error:", error);
       updateAIMessage(aiMessageId, {
@@ -183,7 +160,6 @@ const Chat_Ai = () => {
     );
   };
 
-  // Render a message based on its type
   const renderMessage = (message: Message, index: number) => {
     const isCurrentMessage = message.id === currentAiMessageId;
 
