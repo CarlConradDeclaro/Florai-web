@@ -26,13 +26,9 @@ export const PLANT_TYPE = [
 ];
 
 export const LIFE_SPAN = ["Annual", "Biennial", "Perennial"];
-
 export const SUNLIGHT = ["Full Shade ", "Partial Shade", "Full Sun"];
-
 export const WATERING_NEEDS = ["Low", "Moderate", "High"];
-
 export const HUMIDITY_PREFERENCE = ["Low", "Moderate", "High"];
-
 export const MEDICINAL_USES = ["Yes", "No"];
 
 export const CULINARY_USE = [
