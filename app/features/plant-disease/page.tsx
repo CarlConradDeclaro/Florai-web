@@ -15,6 +15,7 @@ import {
 } from "lucide-react";
 import { DiseaseResult } from "@/types/Plant";
 import withAuth from "@/lib/withAuth";
+import { Predict_Disease } from "@/service/plant-disease-detection";
 
 // Main component
 const PlantDisease: React.FC = () => {
@@ -83,11 +84,7 @@ const PlantDisease: React.FC = () => {
       const formData = new FormData();
       formData.append("image", selectedImage);
 
-      const response = await fetch("http://localhost:8000/plant_disease/", {
-        // Adjust to your API endpoint
-        method: "POST",
-        body: formData,
-      });
+      const response = await Predict_Disease(formData);
 
       if (!response.ok) {
         throw new Error("Failed to analyze image");

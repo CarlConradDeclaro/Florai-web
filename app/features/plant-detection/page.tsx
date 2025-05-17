@@ -16,6 +16,10 @@ import {
 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import withAuth from "@/lib/withAuth";
+import {
+  Classify_Plant,
+  Get_Predicted_Plant,
+} from "@/service/plant-classification";
 
 const PlantDetection: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -167,10 +171,7 @@ const PlantDetection: React.FC = () => {
       const formData = new FormData();
       formData.append("image", file);
 
-      const response = await fetch("http://localhost:8000/classify/", {
-        method: "POST",
-        body: formData,
-      });
+      const response = await Classify_Plant(formData);
 
       if (!response.ok) {
         throw new Error(`Classification failed: ${response.statusText}`);
@@ -194,16 +195,7 @@ const PlantDetection: React.FC = () => {
 
   const getPlantDetails = async (flowerName: string) => {
     try {
-      const response = await fetch(
-        "http://localhost:8000/predicted_image_details/",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ prompt: flowerName }),
-        }
-      );
+      const response = await Get_Predicted_Plant(flowerName);
 
       if (!response.ok) {
         throw new Error(`Failed to get plant details: ${response.statusText}`);
@@ -213,7 +205,6 @@ const PlantDetection: React.FC = () => {
       setPlantInfo(data);
     } catch (err) {
       console.error("Error getting plant details:", err);
-      // We don't show this error to the user since we still have the classification result
     }
   };
 

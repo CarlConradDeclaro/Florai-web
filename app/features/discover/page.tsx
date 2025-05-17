@@ -39,6 +39,7 @@ import debounce from "lodash/debounce";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import withAuth from "@/lib/withAuth";
+import { Get_Search_Plants } from "@/service/search";
 
 // Types for plant data
 interface Plant {
@@ -107,27 +108,22 @@ const Discover = () => {
   const [pageTransition, setPageTransition] = useState(false);
   const [favorites, setFavorites] = useState<number[]>([]);
 
-  // Initialize with Convex plants when available
   useEffect(() => {
     if (convexPlants) {
       const mapped = convexPlants.map((plant) => ({
         ...plant,
-        id: plant._id, // map _id to id
+        id: plant._id,
       }));
       setPlants(mapped);
     }
   }, [convexPlants]);
 
-  // Get unique categories from plants
   const categories = Array.from(new Set(plants.map((plant) => plant.category)));
 
-  // Search plants using the semantic search API (Django)
   const searchPlants = async (query: string) => {
     setIsLoading(true);
     try {
-      const response = await axios.get(
-        `http://localhost:8000/plants/search/?q="${query}"`
-      );
+      const response = await Get_Search_Plants(query);
       setPlants(response.data);
     } catch (error) {
       console.error("Error searching plants:", error);
@@ -137,7 +133,6 @@ const Discover = () => {
     }
   };
 
-  // Debounced search function
   const debouncedSearch = debounce((query: string) => {
     if (query.trim() === "") {
       if (convexPlants) {
