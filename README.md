@@ -14,6 +14,8 @@
 ---
 
 ## 🖼️ Preview
+![Image](https://github.com/user-attachments/assets/7ac7e988-b817-499e-b8fa-47229b8b1d5a)
+
 ### 🍃 Plant Disease Detection
 ![Plant Disease Detection](https://github.com/user-attachments/assets/98350f2a-bdc1-4d50-914a-b94d6c6afbc3)
 
