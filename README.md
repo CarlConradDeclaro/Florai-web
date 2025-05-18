@@ -14,6 +14,9 @@
 ---
 
 ## 🖼️ Preview
+### 🍃 Plant Disease Detection
+![Plant Disease Detection](https://github.com/user-attachments/assets/98350f2a-bdc1-4d50-914a-b94d6c6afbc3)
+
 
 ### 🤖 AI Chatbot
 ![AI Chatbot](https://github.com/user-attachments/assets/4a919806-db61-4e89-a450-ec87aee43469)
@@ -21,8 +24,6 @@
 ### 🌼 Flower Classification
 ![Flower Classification](https://github.com/user-attachments/assets/a71bf14f-5d1d-432b-ab8b-c7bbc7cbea63)
 
-### 🍃 Plant Disease Detection
-![Plant Disease Detection](https://github.com/user-attachments/assets/98350f2a-bdc1-4d50-914a-b94d6c6afbc3)
 
 ---
 
