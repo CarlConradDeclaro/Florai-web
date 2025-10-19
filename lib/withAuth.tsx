@@ -5,13 +5,14 @@ const withAuth = (WrappedComponent: React.ComponentType) => {
   return function AuthWrapper(props: any) {
     const router = useRouter();
 
-    useEffect(() => {
-      const token = localStorage.getItem("accessToken");
+    //uncomment to protect routes
+    // useEffect(() => {
+    //   const token = localStorage.getItem("accessToken");
 
-      if (!token) {
-        router.replace("/features/login");
-      }
-    }, []);
+    //   if (!token) {
+    //     router.replace("/features/login");
+    //   }
+    // }, []);
 
     return <WrappedComponent {...props} />;
   };
